@@ -1,0 +1,283 @@
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+							<style>
+								body {
+									background-color: white; /* Ensure the iframe has a white background */
+								}
+
+								
+							</style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>altwixy - Bio Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .container {
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .profile-picture {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 4px solid #ff0000;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.6);
+      margin-bottom: 20px;
+      animation: float 3s infinite ease-in-out;
+      transition: transform 0.3s ease;
+    }
+
+    .profile-picture:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(255, 0, 0, 1), 0 0 60px rgba(255, 0, 0, 0.8);
+    }
+
+    .name {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ff0000;
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+      margin-bottom: 10px;
+      animation: glowText 1.5s infinite alternate;
+    }
+
+    .description {
+      font-size: 1.2rem;
+      color: #ddd;
+      overflow: hidden;
+      white-space: nowrap;
+      margin: 0 auto;
+      letter-spacing: 0.15em;
+      border-right: 0.15em solid #ff0000;
+      animation: typing 2s steps(20), blink-caret 0.75s step-end infinite;
+    }
+
+    .social-icons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .social-icons a {
+      color: #ff0000;
+      font-size: 1.5rem;
+      text-decoration: none;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      color: #ff4d4d;
+      transform: scale(1.2);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes glowText {
+      from {
+        text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+      }
+      to {
+        text-shadow: 0 0 20px rgba(255, 0, 0, 1);
+      }
+    }
+
+    @keyframes typing {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes blink-caret {
+      from, to {
+        border-color: transparent;
+      }
+      50% {
+        border-color: #ff0000;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <div class="container">
+    <img src="https://cdn.discordapp.com/avatars/535823608258363424/4c15c6e032432a6fb1d33e70d3cba54c?size=1024" alt="pfp" class="profile-picture">
+    <div class="name">altwixy</div>
+    <div class="description" id="typewriter"></div>
+    <div class="social-icons">
+      <a href="https://github.com" target="altwixy" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://twitter.com" target="altwixylol" title="Twitter"><i class="fab fa-twitter"></i></a>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    class Particle {
+      constructor(x, y, size, speedX, speedY, color) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        this.color = color;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.size > 0.2) this.size -= 0.05;
+
+        this.draw();
+      }
+    }
+
+    const particlesArray = [];
+
+    function createParticles() {
+      for (let i = 0; i < 5; i++) {
+        const size = Math.random() * 5 + 1;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const speedX = Math.random() * 3 - 1.5;
+        const speedY = Math.random() * 3 - 1.5;
+        const color = `rgba(255, 0, 0, ${Math.random() * 0.5 + 0.5})`;
+
+        particlesArray.push(new Particle(x, y, size, speedX, speedY, color));
+      }
+    }
+
+    function handleParticles() {
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        if (particlesArray[i].size <= 0.3) {
+          particlesArray.splice(i, 1);
+          i--;
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      createParticles();
+      handleParticles();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Typewriter effect
+    const texts = ["Developer", "Hacker", "14 y/o"];
+    let textIndex = 0;
+    let charIndex = 0;
+    const typewriterElement = document.getElementById('typewriter');
+
+    function typeWriter() {
+      if (charIndex < texts[textIndex].length) {
+        typewriterElement.textContent += texts[textIndex].charAt(charIndex);
+        charIndex++;
+        setTimeout(typeWriter, 100);
+      } else {
+        setTimeout(eraseText, 1500);
+      }
+    }
+
+    function eraseText() {
+      if (charIndex > 0) {
+        typewriterElement.textContent = texts[textIndex].substring(0, charIndex - 1);
+        charIndex--;
+        setTimeout(eraseText, 50);
+      } else {
+        textIndex = (textIndex + 1) % texts.length;
+        setTimeout(typeWriter, 500);
+      }
+    }
+
+    typeWriter();
+  </script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+
+							<script>
+                            	
+							</script>
+                        </body>
+                        </html>
+                    
